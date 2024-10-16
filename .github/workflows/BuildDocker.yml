@@ -12,18 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: postgres:13
-        env:
-          POSTGRES_USER: atro_user
-          POSTGRES_PASSWORD: atro_password
-          POSTGRES_DB: atro_db
-        ports:
-          - 5432:5432
-        options: >
-          --health-cmd "pg_isready -U atro_user" --health-interval 10s --health-timeout 5s --health-retries 5
-
+    
     steps:
     - name: Create AtroPIM directory
       run: mkdir -p /var/www/atropim
@@ -60,13 +49,6 @@ jobs:
         composer install --no-interaction --prefer-dist --optimize-autoloader
 
     - name: Run AtroPIM installation
-      env:
-        DB_CONNECTION: pgsql
-        DB_HOST: localhost
-        DB_PORT: 5432
-        DB_DATABASE: atro_db
-        DB_USERNAME: atro_user
-        DB_PASSWORD: atro_password
       run: |
         cd /var/www/atropim
         php artisan atrocore:install --no-demo-data
