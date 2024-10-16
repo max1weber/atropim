@@ -15,12 +15,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+   
+
+    - name: Create AtroPIM directory
+      run: sudo mkdir -p $AGENT_WORKFOLDER/atropim
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        path: $AGENT_WORKFOLDER/atropim
 
     - name: Clone Skeleton PIM (No Demo)
       run: |
-        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git /var/www/atropim
-        cd /var/www/atropim
+        sudo $1
+        cd $AGENT_WORKFOLDER/atropim
+        php composer.phar self-update
+        php composer.phar update
+
+    - name: Set ownership for AtroPIM
+      run: sudo chown -R www-data:www-data $AGENT_WORKFOLDER/atropim
+
+    - name: Clone Skeleton PIM (No Demo)
+      run: |
+        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git cd $AGENT_WORKFOLDER/atropim
+        cd $AGENT_WORKFOLDER/atropim
         php composer.phar self-update
         php composer.phar update
 
