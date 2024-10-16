@@ -37,6 +37,8 @@ jobs:
         cd ./skeleton-pim-no-demo
         sudo php composer.phar self-update
         sudo php composer.phar update
+        cd $AGENT_WORKFOLDER/atropim
+        tree 
 
     - name: Validate composer.json and composer.lock
       run: sudo composer validate --strict
