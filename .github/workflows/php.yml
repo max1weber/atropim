@@ -31,12 +31,12 @@ jobs:
     - name: Clone Skeleton PIM (No Demo)
       run: |
         cd $AGENT_WORKFOLDER/atropim
-        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git
-        php composer.phar self-update
-        php composer.phar update
+        sudo git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git
+        sudo php composer.phar self-update
+        sudo php composer.phar update
 
     - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      run: sudo composer validate --strict
 
     - name: Cache Composer packages
       id: composer-cache
@@ -48,7 +48,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: sudo composer install --prefer-dist --no-progress
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
