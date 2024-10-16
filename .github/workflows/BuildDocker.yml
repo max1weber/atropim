@@ -22,17 +22,11 @@ jobs:
         ports:
           - 5432:5432
         options: >
-          --health-cmd "pg_isready -U atro_user" \
-          --health-interval 10s \
-          --health-timeout 5s \
-          --health-retries 5
+          --health-cmd "pg_isready -U atro_user" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - name: Create AtroPIM directory
       run: mkdir -p /var/www/atropim
-
-    - name: Enter AtroPIM directory
-      run: cd /var/www/atropim
 
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -41,8 +35,8 @@ jobs:
 
     - name: Clone Skeleton PIM (No Demo)
       run: |
+        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git /var/www/atropim
         cd /var/www/atropim
-        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git .
         php composer.phar self-update
         php composer.phar update
 
@@ -56,10 +50,14 @@ jobs:
         extensions: mbstring, pdo_pgsql
 
     - name: Add AtroCore repository
-      run: composer config repositories.atrocore vcs https://github.com/atrocore/atrocore
+      run: |
+        cd /var/www/atropim
+        composer config repositories.atrocore vcs https://github.com/atrocore/atrocore
 
     - name: Install Composer dependencies
-      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+      run: |
+        cd /var/www/atropim
+        composer install --no-interaction --prefer-dist --optimize-autoloader
 
     - name: Run AtroPIM installation
       env:
@@ -70,6 +68,7 @@ jobs:
         DB_USERNAME: atro_user
         DB_PASSWORD: atro_password
       run: |
+        cd /var/www/atropim
         php artisan atrocore:install --no-demo-data
 
     - name: Create Dockerfile
