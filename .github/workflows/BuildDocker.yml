@@ -3,10 +3,10 @@ name: Build Docker Image for AtroPIM
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -28,8 +28,26 @@ jobs:
           --health-retries 5
 
     steps:
+    - name: Create AtroPIM directory
+      run: mkdir -p /var/www/atropim
+
+    - name: Enter AtroPIM directory
+      run: cd /var/www/atropim
+
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        path: /var/www/atropim
+
+    - name: Clone Skeleton PIM (No Demo)
+      run: |
+        cd /var/www/atropim
+        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git .
+        php composer.phar self-update
+        php composer.phar update
+
+    - name: Set ownership for AtroPIM
+      run: chown -R www-data:www-data /var/www/atropim
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
@@ -53,6 +71,12 @@ jobs:
         DB_PASSWORD: atro_password
       run: |
         php artisan atrocore:install --no-demo-data
+
+    - name: Create Dockerfile
+      run: |
+        echo "FROM php:8.0-apache" > Dockerfile
+        echo "COPY . /var/www/html" >> Dockerfile
+        echo "RUN docker-php-ext-install pdo_pgsql" >> Dockerfile
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
