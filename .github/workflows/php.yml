@@ -31,7 +31,7 @@ jobs:
     - name: Clone Skeleton PIM (No Demo)
       run: |
         cd $AGENT_WORKFOLDER/atropim
-        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git $AGENT_WORKFOLDER/atropim
+        git clone https://gitlab.atrocore.com/atrocore/skeleton-pim-no-demo.git
         php composer.phar self-update
         php composer.phar update
 
