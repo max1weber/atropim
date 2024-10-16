@@ -25,13 +25,6 @@ jobs:
       with:
         path: $AGENT_WORKFOLDER/atropim
 
-    - name: Clone Skeleton PIM (No Demo)
-      run: |
-        sudo $1
-        cd $AGENT_WORKFOLDER/atropim
-        php composer.phar self-update
-        php composer.phar update
-
     - name: Set ownership for AtroPIM
       run: sudo chown -R www-data:www-data $AGENT_WORKFOLDER/atropim
 
