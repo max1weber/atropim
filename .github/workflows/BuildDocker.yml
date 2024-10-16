@@ -37,6 +37,9 @@ jobs:
         php-version: '8.0'
         extensions: mbstring, pdo_pgsql
 
+    - name: Add AtroCore repository
+      run: composer config repositories.atrocore vcs https://github.com/atrocore/atrocore
+
     - name: Install Composer dependencies
       run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
